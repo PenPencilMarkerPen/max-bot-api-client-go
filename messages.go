@@ -55,7 +55,7 @@ func (a *messages) GetMessages(ctx context.Context, chatID int64, messageIDs []s
 }
 
 // EditMessage updates message by id
-func (a *messages) EditMessage(ctx context.Context, messageID int64, message *Message) error {
+func (a *messages) EditMessage(ctx context.Context, messageID string, message *Message) error {
 	s, err := a.editMessage(ctx, messageID, message.message)
 	if err != nil {
 		return err
@@ -160,10 +160,10 @@ func (a *messages) sendMessage(ctx context.Context, vip bool, reset bool, chatID
 	return "", result
 }
 
-func (a *messages) editMessage(ctx context.Context, messageID int64, message *schemes.NewMessageBody) (*schemes.SimpleQueryResult, error) {
+func (a *messages) editMessage(ctx context.Context, messageID string, message *schemes.NewMessageBody) (*schemes.SimpleQueryResult, error) {
 	result := new(schemes.SimpleQueryResult)
 	values := url.Values{}
-	values.Set("message_id", strconv.Itoa(int(messageID)))
+	values.Set("message_id", messageID)
 	body, err := a.client.request(ctx, http.MethodPut, "messages", values, false, message)
 	if err != nil {
 		return result, err
